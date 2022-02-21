@@ -19,17 +19,19 @@ kappa=2;
 while alpha<alphamax
 
     for k=1:K
-        [Z, Md] = find_min_pixels(S, opts.r);
-        z = Z(Md>0);
+        %[Z, Md] = find_min_pixels(S, opts.r);
+        %z = Z(Md>0);
         
         if opts.s<opts.scales/2
-            lambdat = min(max(lambda,mean(abs(z))),0.1); 
-            Z(abs(Z)<lambdat) = 0;
+            [~,S] = intensity_prior(S,35,lambda,'h');
+            %lambdat = min(max(lambda,mean(abs(z))),0.1); 
+            %Z(abs(Z)<lambdat) = 0;
         else
-            Z = sign(Z).*max(Z-lambda,0);
+            [~,S] = intensity_prior(S,35,lambda,'s');
+            %Z = sign(Z).*max(Z-lambda,0);
         end
 
-        S = S.*(1-Md) + Z.*Md;
+        %S = S.*(1-Md) + Z.*Md;
 
        % g  (Gradient) sub-problem 
         Gh = [diff(S,1,2), S(:,1,:) - S(:,end,:)]; % gh
