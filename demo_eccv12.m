@@ -12,18 +12,38 @@ opts.xk_iter = 5;  % the iterations
 opts.k_thresh = 20;
 opts.gamma_correct = 1.0;
         
-for img=1:4
-    for blur=1:12
+for img=4%:4
+    for blur=9%:12
         imgName = ['Blurry',num2str(img),'_',num2str(blur),'.png'];
         disp(['========================== ',imgName,' =========================='])
 
-        filename = ['.\BlurryImages\', imgName];
+        filename = ['BlurryImages/', imgName];
         opts.kernel_size = kernel_sizes(img,blur);
 
         lambda = 0.1; lambda_grad = 4e-3;
         lambda_tv = 1e-3; lambda_l0 = 1e-3; weight_ring = 0; % lambda_tv, lambda_l0, weight_ring are not used in kernel estimation.
+        
+        if img==1 && blur==8
+            lambda = 0.5;
+        end
 
-        if (blur==8) || (blur==10 && img==2) || (blur==11)
+        if (img==1 || img==2) && blur==9
+            lambda = 0.8;
+        end
+
+        if img==3 && blur==9
+            lambda = 0.8;
+        end
+
+        if img==3 && blur==10
+            lambda_grad = 1e-3;
+        end
+
+        if img==4 && blur==9
+            lambda = 0.8;
+        end
+
+        if (blur==8) || (img==2 && blur==10) || (blur==11)
             lambda_l0 = 2e-4; weight_ring = 1;
         end
 
@@ -41,7 +61,7 @@ for img=1:4
         k = kernel - min(kernel(:));
         k = k./max(k(:));
 
-        imwrite(k,['results_eccv12\',  'tvmpr_',imgName(7:end-4), '_kernel','.png']);
-        imwrite(Latent,['results_eccv12\', 'tvmpr_',imgName(7:end-4), '.png']);
+        imwrite(k,['results_eccv12/',  'eecp_',imgName(7:end-4), '_kernel','.png']);
+        imwrite(Latent,['results_eccv12/', 'eecp_',imgName(7:end-4), '.png']);
     end
 end
